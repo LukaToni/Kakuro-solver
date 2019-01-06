@@ -70,6 +70,9 @@ np_kakuro_1_S = np.array(kakuro_1_S)
 # print(np_kakuro_1_N[:, 0])  # first column
 
 
+
+
+
 game = np_kakuro_1_N
 
 length_game = len(game)
@@ -78,6 +81,7 @@ high_game = len(game[0])
 
 down_num = 0
 right_num = 0
+
 
 for i in range(0, length_game):
     for j in range(0, high_game):
@@ -100,3 +104,81 @@ for i in range(0, length_game):
             game[i][j] = ele
 
 print(game)
+
+# NOVO
+def ni_duplikatov(vrednosti):
+    mnozica = set(vrednosti)
+    if len(mnozica) == len(vrednosti):
+        return True
+    return False
+
+def mozna_stevila(st_polj, sestevek):
+    rez = set()
+    stevila = [s+1 for s in range(st_polj)]
+    if sum(stevila) == sestevek and ni_duplikatov(stevila):
+        for s in stevila:
+            rez.add(s)
+    """ TODO
+    potrebno je najti vse nabore stevil, da je sestevek stevil pravi, pri cemer se stevila ne ponavljajo (glej zgornji pogoj)
+    to je potrebno implementirati z rekurzijo; primer: pri vhodih st_polj=2 in sestevek=5, so mozne kombinacije:
+    1,4 in 2,3. rez mora vrniti 1,2,3,4
+    """
+    return rez
+
+# algoritem based on: http://amit.metodi.me/oldcode/java/kakuro.php
+
+def algoritem(game, len, high):
+    # poisci kje se vpisuje vrednosti in dodeli mozne vrednosti polju
+    mnozice = [[set() for x in range(len)] for y in range(high)]
+    print(mnozice)
+
+    # pogledamo mozne kandidate za vsa polja navzdol - STEP 1
+    for i in range(0, len):
+        for j in range(0, high):
+            ele = game[i][j]
+            if isinstance(ele, tuple):
+                vrednosti = []
+
+                down = ele[0]
+                if down != 0:
+                    # get number of filed for insert numbers
+                    down_num = get_down_number_filed(i + 1, j, high)
+                    mozna = mozna_stevila(down_num, down)
+                    # sedaj vsem dol dodelimo mozne vrednosti (STEP 1 za navpicne)
+                    for k in range(i+1, i+1+down):
+                        for m in mozna:
+                            mnozice[k][j].add(m)
+
+    # sedaj pogledamo se za kandidate desno, poleg tega pa naredimo presek vseh, da izlocimo neverjetne - STEP 1 & 2
+    for i in range(0, len):
+        for j in range(0, high):
+            ele = game[i][j]
+            if isinstance(ele, tuple):
+                vrednosti = []
+
+                right = ele[1]
+                if right != 0:
+                    # get number of filed for insert numbers
+                    right_num = get_right_number_filed(i, j + 1, length_game)
+                    mozna = mozna_stevila(right_num, right)
+                    # sedaj naredimo tmp in v polja mnozice shranimo presek med vodoravnimi/navpicnimi vrednostmmi (STEP 2)
+                    for k in range(j+1, j+1+right):
+                        tmp = set()
+                        for m in mozna:
+                            tmp.add(m)
+                        mnozice[i][k] = mnozice[i][k].intersection(tmp)
+
+    # sedaj smo naredili korak 2 -> imamo torej informirano mrezo, ki nam pove mozne stevilke v posametnem polju.
+    # tukaj lahko izberemo en informiran algoritem in uporabimo mrezo mnozice. lotimo se koraka 3 (STEP 3)
+    for i in range(0, len):
+        for j in range(0, high):
+            # ce je mozna le ena stevilka
+            if len(mnozice[i][j]) == 1:
+                game[i][j]=mnozice[i][j]
+
+    # STEP 4
+
+
+
+
+algoritem(game, length_game, high_game)
