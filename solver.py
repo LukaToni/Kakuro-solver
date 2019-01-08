@@ -1,5 +1,6 @@
 import numpy as np
 import collections
+import itertools
 
 
 def get_right_number_filed(i, j, length_game):
@@ -103,7 +104,7 @@ for i in range(0, length_game):
         else:
             game[i][j] = ele
 
-print(game)
+# print(game)
 
 # NOVO
 def ni_duplikatov(vrednosti):
@@ -112,18 +113,33 @@ def ni_duplikatov(vrednosti):
         return True
     return False
 
-def mozna_stevila(st_polj, sestevek):
+def mozne_kombinacije(st_polj, sestevek):
     rez = set()
-    stevila = [s+1 for s in range(st_polj)]
-    if sum(stevila) == sestevek and ni_duplikatov(stevila):
-        for s in stevila:
-            rez.add(s)
-    """ TODO
-    potrebno je najti vse nabore stevil, da je sestevek stevil pravi, pri cemer se stevila ne ponavljajo (glej zgornji pogoj)
-    to je potrebno implementirati z rekurzijo; primer: pri vhodih st_polj=2 in sestevek=5, so mozne kombinacije:
-    1,4 in 2,3. rez mora vrniti 1,2,3,4
-    """
+    all_possible_num = []
+    numbers = [1,2,3,4,5,6,7,8,9]
+    # dobiš vse pare kombinacij za dano vsoto in podano število polj
+    for seq in itertools.combinations(numbers, st_polj):
+        if sum(seq) == sestevek:
+            rez.add(seq)
+
     return rez
+
+def mozna_stevila(st_polj, sestevek):
+
+    all_possible_num = []
+    numbers = [1,2,3,4,5,6,7,8,9]
+    # dobiš vse pare kombinacij za dano vsoto in podano število polj
+    for seq in itertools.combinations(numbers, st_polj):
+        if sum(seq) == sestevek:
+            for num in seq:
+                all_possible_num.append(num)
+
+    all_nums = np.unique(np.array(all_possible_num))
+
+    #return rez
+    return all_nums
+
+mozna_stevila(4,13)
 
 # algoritem based on: http://amit.metodi.me/oldcode/java/kakuro.php
 
