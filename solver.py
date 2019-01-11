@@ -82,29 +82,27 @@ def mozna_stevila(st_polj, sestevek):
 
     all_nums = np.unique(np.array(all_possible_num))
     #return rez
-    return all_nums
+    return set(all_nums)
 
 
 def algoritem(game, len, high):
     # algoritem based on: http://amit.metodi.me/oldcode/java/kakuro.php
     # poisci kje se vpisuje vrednosti in dodeli mozne vrednosti polju
-    mnozice = [[set() for x in range(len)] for y in range(high)]
-    print(mnozice)
+    mnozice = [[set() for _ in range(len)] for _ in range(high)]
 
     # pogledamo mozne kandidate za vsa polja navzdol - STEP 1
     for i in range(0, len):
         for j in range(0, high):
             ele = game[i][j]
             if isinstance(ele, tuple):
-                vrednosti = []
-
                 down = ele[0]
                 if down != 0:
                     # get number of filed for insert numbers
-                    down_num = get_down_number_filed(i + 1, j, high)
+                    down_num = get_down_number_filed(i + 1, j, high-1)
                     mozna = mozna_stevila(down_num, down)
                     # sedaj vsem dol dodelimo mozne vrednosti (STEP 1 za navpicne)
-                    for k in range(i+1, i+1+down):
+                    # dao +1 in -1 da je bolj jasno kaj se dogaja
+                    for k in range(i+1, i+down_num):
                         for m in mozna:
                             mnozice[k][j].add(m)
 
@@ -113,15 +111,13 @@ def algoritem(game, len, high):
         for j in range(0, high):
             ele = game[i][j]
             if isinstance(ele, tuple):
-                vrednosti = []
-
                 right = ele[1]
                 if right != 0:
                     # get number of filed for insert numbers
-                    right_num = get_right_number_filed(i, j + 1, length_game)
+                    right_num = get_right_number_filed(i, j + 1, length_game-1)
                     mozna = mozna_stevila(right_num, right)
                     # sedaj naredimo tmp in v polja mnozice shranimo presek med vodoravnimi/navpicnimi vrednostmmi (STEP 2)
-                    for k in range(j+1, j+1+right):
+                    for k in range(j+1, j+right_num):
                         tmp = set()
                         for m in mozna:
                             tmp.add(m)
@@ -129,12 +125,14 @@ def algoritem(game, len, high):
 
     # sedaj smo naredili korak 2 -> imamo torej informirano mrezo, ki nam pove mozne stevilke v posametnem polju.
     # tukaj lahko izberemo en informiran algoritem in uporabimo mrezo mnozice. lotimo se koraka 3 (STEP 3)
+    #TODO v 132 vrstici je napaka
     for i in range(0, len):
         for j in range(0, high):
-            # ce je mozna le ena stevilka
+            # ce je mozna le ena stevilka jo vpisemo v igro
             if len(mnozice[i][j]) == 1:
-                game[i][j]=mnozice[i][j]
+                game[i][j] = list(mnozice[i][j])[0]
 
+    return mnozice
     # STEP 4
 
 
@@ -168,7 +166,8 @@ if __name__ == "__main__":
 
     down_num = 0
     right_num = 0
-    mozna_stevila(4, 13)
-    algoritem(game, length_game, high_game)
-
-
+    #print(mozna_stevila(4, 13))
+    #print(mozne_kombinacije(4, 13))
+    mn = algoritem(game, length_game, high_game)
+    for m in mn:
+        print(m)
