@@ -245,7 +245,6 @@ if __name__ == "__main__":
         [(0, 4), 1, 3],
     ]
 
-
     np_kakuro_1_S = np.array(kakuro_8x8_S)
     game = kakuro_8x8_N
 
