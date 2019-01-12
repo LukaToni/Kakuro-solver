@@ -97,14 +97,21 @@ def algoritem_init(game, length, high):
             ele = game[i][j]
             if isinstance(ele, tuple):
                 down = ele[0]
+                mnozice[i][j] = ([], [])
                 if down != 0:
                     # get number of filed for insert numbers
                     down_num = get_down_number_filed(i + 1, j, high)
                     mozna = mozna_stevila(down_num, down)
+                    # najdemo mozne kombinacije
+                    mnozice[i][j][0].append(mozne_kombinacije(down_num, down))
                     # sedaj vsem dol dodelimo mozne vrednosti (STEP 1 za navpicne)
                     for k in range(i+1, i+down_num+1):
                         for m in mozna:
                             mnozice[k][j].add(m)
+
+    for m in mnozice:
+        print(m)
+    print('\n')
 
     # sedaj pogledamo se za kandidate desno, poleg tega pa naredimo presek vseh, da izlocimo neverjetne - STEP 1 & 2
     for i in range(0, length):
@@ -116,6 +123,8 @@ def algoritem_init(game, length, high):
                     # get number of filed for insert numbers
                     right_num = get_right_number_filed(i, j + 1, length_game)
                     mozna = mozna_stevila(right_num, right)
+                    # najdemo mozne kombinacije
+                    mnozice[i][j][1].append(mozne_kombinacije(right_num, right))
                     # sedaj naredimo tmp in v polja mnozice shranimo presek med vodoravnimi/navpicnimi vrednostmmi (STEP 2)
                     for k in range(j+1, j+right_num+1):
                         tmp = set()
@@ -137,23 +146,63 @@ def algoritem_init(game, length, high):
     return mnozice
     # STEP 4
 
-def algoritem_solve(mnozice, game, length, high):
+def algoritem_solve(game, length, high, mnozice):
     for i in range(0, length):
         for j in range(0, high):
             ele = game[i][j]
             if isinstance(ele, tuple):
+                # down je sum, down_num je pa st polj za resit
                 down = ele[0]
                 if down != 0:
                     # get number of filed for insert numbers
                     down_num = get_down_number_filed(i + 1, j, high)
                     resena_stevila = set()
+                    # pogledamo katera sevila so ze resena
                     for k in range(i + 1, i + down_num + 1):
                         if len(mnozice[k][j]) == 1:
                             resena_stevila.add(list(mnozice[k][j])[0])
-                    for k in range(i + 1, i + down_num + 1):
-                        if len(mnozice[k][j]) != 1:
-                            mnozice[k][j] = mnozice[k][j].difference(resena_stevila)
+                    # ce imamo se neresena polja
+                    if len(resena_stevila) != down_num:
+                        new_down = down - sum(resena_stevila)
+                        new_down_num = down_num - len(resena_stevila)
+                        nova_mozna_st = mozna_stevila(new_down_num, new_down)
+                        nova_mozna_st = nova_mozna_st.difference(resena_stevila)
+                        # posodobimo mrezo
+                        for k in range(i + 1, i + down_num + 1):
+                            if len(mnozice[k][j]) != 1:
+                                mnozice[k][j] = mnozice[k][j].intersection(nova_mozna_st)
 
+    for i in range(0, length):
+        for j in range(0, high):
+            ele = game[i][j]
+            if isinstance(ele, tuple):
+                right = ele[1]
+                if right != 0:
+                    # get number of filed for insert numbers
+                    right_num = get_right_number_filed(i, j + 1, length_game)
+                    resena_stevila = set()
+                    # pogledamo katera sevila so ze resena
+                    for k in range(j + 1, j + right_num + 1):
+                        if len(mnozice[i][k]) == 1:
+                            resena_stevila.add(list(mnozice[i][k])[0])
+                    # ce imamo se neresena polja
+                    if len(resena_stevila) != right_num:
+                        new_right = right - sum(resena_stevila)
+                        new_right_num = right_num - len(resena_stevila)
+                        nova_mozna_st = mozna_stevila(new_right_num, new_right)
+                        nova_mozna_st = nova_mozna_st.difference(resena_stevila)
+                        # posodobimo mrezo
+                        for k in range(j + 1, j + right_num + 1):
+                            if len(mnozice[i][k]) != 1:
+                                mnozice[i][k] = mnozice[i][k].intersection(nova_mozna_st)
+
+    for i in range(0, length):
+        for j in range(0, high):
+            # ce je mozna le ena stevilka jo vpisemo v igro
+            if len(mnozice[i][j]) == 1:
+                game[i][j] = list(mnozice[i][j])[0]
+
+    return mnozice
 
 
 if __name__ == "__main__":
@@ -255,7 +304,24 @@ if __name__ == "__main__":
     down_num = 0
     right_num = 0
     #print(mozna_stevila(4, 13))
-    #print(mozne_kombinacije(4, 13))
+    print(mozne_kombinacije(3, 21))
+    print(mozne_kombinacije(3, 24))
+    print(mozne_kombinacije(2, 12))
+    print(mozne_kombinacije(3, 6))
+    print(mozne_kombinacije(3, 7))
+    print(mozne_kombinacije(2, 3))
+    print(mozne_kombinacije(2, 5))
+    print(mozne_kombinacije(2, 11))
+    print(mozne_kombinacije(3, 9))
+
     mn = algoritem_init(game, length_game, high_game)
+
+    for m in mn:
+        print(m)
+    print('\n')
+
+    for i in range(20):
+        algoritem_solve(game, length_game, high_game, mn)
+
     for m in mn:
         print(m)
