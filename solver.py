@@ -1,6 +1,8 @@
 import numpy as np
 import collections
 import itertools
+import backtracing
+import time
 
 
 def get_right_number_filed(i, j, length_game):
@@ -205,6 +207,17 @@ def algoritem_solve(game, length, high, mnozice):
     return mnozice
 
 
+def algorithem_backtracing(game):
+    length_game = len(game)
+    height_game = len(game[0])
+
+    # all check for equation
+    
+
+
+
+
+
 if __name__ == "__main__":
     set_of_number = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
     # 8 x 8 kakuro
@@ -244,7 +257,6 @@ if __name__ == "__main__":
                     [(0, 10), 8, 2, (17, 0), (0, 14), 6, 8],
                     [(0, 28), 7, 3, 9, 8, 1, (0, 0)],
                     [(0, 14), 2, 1, 8, 3, (0, 0), (0, 0)]]
-
 
     # 5 x 5 kakuro
     kakuro_5x5_N = [
@@ -288,6 +300,12 @@ if __name__ == "__main__":
     ]
     kakuro_3x3_N = np.array(kakuro_3x3_N)
 
+    kakuro_3x3_N_B = "2 2\n" \
+           "14 A1 A2\n" \
+           "4 B1 B2\n" \
+           "10 A1 B1\n" \
+           "8 A2 B2"
+
     kakuro_3x3_S = [
         [(0, 0), (10, 0), (8, 0)],
         [(0, 14), 9, 5],
@@ -304,6 +322,7 @@ if __name__ == "__main__":
     down_num = 0
     right_num = 0
     #print(mozna_stevila(4, 13))
+    """
     print(mozne_kombinacije(3, 21))
     print(mozne_kombinacije(3, 24))
     print(mozne_kombinacije(2, 12))
@@ -325,3 +344,16 @@ if __name__ == "__main__":
 
     for m in mn:
         print(m)
+    """
+
+    STEPS = 10
+    sum_time = 0
+    for i in range (0, STEPS):
+        start_time = time.time()
+        backtracing.start_backtracing(kakuro_3x3_N_B, kakuro_3x3_N, False)
+        seconds = (time.time() - start_time)
+        sum_time += seconds
+        #print("--- %s seconds ---" % seconds)
+
+    average_time = sum_time / STEPS
+    print(average_time)
