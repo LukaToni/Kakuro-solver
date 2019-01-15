@@ -46,6 +46,28 @@ def is_solution(board,rules):
             return False
     return True
 
+
+def possible_combinations(st_polj, sestevek):
+    all = set()
+    rez = set()
+    all_possible_num = []
+    numbers = [1,2,3,4,5,6,7,8,9]
+    # dobiš vse pare kombinacij za dano vsoto in podano število polj
+    for seq in itertools.combinations(numbers, st_polj):
+        if sum(seq) == sestevek:
+            rez.add(seq)
+
+    for el in rez:
+        perm = possible_permutation(el)
+        for sol in perm:
+            all.add(sol)
+
+    return all
+
+def possible_permutation(array):
+     perm = [x for x in itertools.permutations(array)]
+     return perm
+
 def sum_permutations(number_elems,sum_total):
     if number_elems==1:
         yield(sum_total,)
@@ -56,7 +78,8 @@ def sum_permutations(number_elems,sum_total):
 
 def get_new_candidates(rules,cnt_rule):
     rule = rules[cnt_rule]
-    return sum_permutations(len(rule.cells),rule.value)
+    new_candid = sum_permutations(len(rule.cells),rule.value)
+    return new_candid
 
 def apply_candidate(board,new_candidate,rules,cnt_rule):
     rule=rules[cnt_rule]
@@ -67,12 +90,15 @@ def apply_candidate(board,new_candidate,rules,cnt_rule):
     return board
 
 
-def backtracking (board,rules,cnt_rule, kakuro_original, print) :
+def backtracking (board,rules,cnt_rule, kakuro_original, print1) :
 
-    if print == True:
+    if print1 == True:
         for i in range(0, len(board)):
             for j in range(0, len(board[0])):
-                kakuro_original[i + 1][j + 1] = board[j][i]
+                if board[j][i] == 0:
+                    continue
+                else:
+                    kakuro_original[j + 1][i + 1] = board[j][i]
         print(kakuro_original)
 
     if is_solution(board,rules):
@@ -81,8 +107,13 @@ def backtracking (board,rules,cnt_rule, kakuro_original, print) :
         if cnt_rule < len(rules):
             new_candidates = get_new_candidates(rules,cnt_rule)
             for new_candidate in new_candidates:
+
+                for i in new_candidate:
+                    if i > 9:
+                        break
+
                 new_board = apply_candidate(board,new_candidate,rules,cnt_rule)
-                solution = backtracking(new_board,rules,cnt_rule+1, kakuro_original, print)
+                solution = backtracking(new_board,rules,cnt_rule+1, kakuro_original, print1)
                 if solution[0]:
                     return solution
         return (False, None)
@@ -152,9 +183,12 @@ def start_backtracing(game, kakuro_original, steps):
     b = result[1]
     c = result[1][0][0]
 
-    if steps == True:
-        print("SOLUTION:")
-        for i in range(0, len(cols)):
-            for j in range(0, len(rows)):
-                kakuro_original[i+1][j+1] = result[1][j][i]
-        print(kakuro_original)
+
+    print("SOLUTION:")
+    for i in range(0, len(cols)):
+        for j in range(0, len(rows)):
+            if result[1][j][i] == 0:
+                continue
+            else:
+                kakuro_original[j+1][i+1] = result[1][j][i]
+    print(kakuro_original)

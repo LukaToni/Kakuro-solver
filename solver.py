@@ -96,8 +96,8 @@ def algoritem_init(game, length, high):
     mnozice = [[set() for _ in range(length)] for _ in range(high)]
 
     # pogledamo mozne kandidate za vsa polja navzdol - STEP 1
-    for i in range(0, length):
-        for j in range(0, high):
+    for i in range(0, high):
+        for j in range(0, length):
             ele = game[i][j]
             if isinstance(ele, tuple):
                 down = ele[0]
@@ -114,8 +114,8 @@ def algoritem_init(game, length, high):
                             mnozice[k][j].add(m)
 
     # sedaj pogledamo se za kandidate desno, poleg tega pa naredimo presek vseh, da izlocimo neverjetne - STEP 1 & 2
-    for i in range(0, length):
-        for j in range(0, high):
+    for i in range(0, high):
+        for j in range(0, length):
             ele = game[i][j]
             if isinstance(ele, tuple):
                 right = ele[1]
@@ -135,8 +135,8 @@ def algoritem_init(game, length, high):
     # stPolj nam pove koliko polj moramo rešiti
     stPolj = 0
     stResenih = 0
-    for i in range(0, length):
-        for j in range(0, high):
+    for i in range(0, high):
+        for j in range(0, length):
             if not isinstance(game[i][j], tuple):
                 stPolj += 1
                 # ce je mozna le ena stevilka jo vpisemo v igro
@@ -147,8 +147,8 @@ def algoritem_init(game, length, high):
     return mnozice, stPolj, stResenih
 
 def algoritem_solve(game, length, high, mnozice):
-    for i in range(0, length):
-        for j in range(0, high):
+    for i in range(0, high):
+        for j in range(0, length):
             ele = game[i][j]
             if isinstance(ele, tuple):
                 # down je sum, down_num je pa st polj za resit
@@ -221,8 +221,8 @@ def algoritem_solve(game, length, high, mnozice):
                         for k, nov in enumerate(nove_stev):
                             mnozice[i+k+1][j] = nov
 
-    for i in range(0, length):
-        for j in range(0, high):
+    for i in range(0, high):
+        for j in range(0, length):
             ele = game[i][j]
             if isinstance(ele, tuple):
                 right = ele[1]
@@ -293,8 +293,8 @@ def algoritem_solve(game, length, high, mnozice):
                             mnozice[i][j+k+1] = nov
 
     stResenih = 0
-    for i in range(0, length):
-        for j in range(0, high):
+    for i in range(0, high):
+        for j in range(0, length):
             # ce je mozna le ena stevilka jo vpisemo v igro
             if len(mnozice[i][j]) == 1:
                 stResenih += 1
@@ -307,23 +307,23 @@ if __name__ == "__main__":
     set_of_number = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
     # 8 x 8 kakuro
     kakuro_8x8_N = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
-                  [(0, 16), 0, 0, (0, 0), (17, 24), 0, 0, 0],
-                  [(0, 17), 0, 0, (15, 29), 0, 0, 0, 0],
-                  [(0, 35), 0, 0, 0, 0, 0, (12, 0), (0, 0)],
-                  [(0, 0), (0, 7), 0, 0, (7, 8), 0, 0, (7, 0)],
-                  [(0, 0), (11, 0), (10, 16), 0, 0, 0, 0, 0],
-                  [(0, 21), 0, 0, 0, 0, (0, 5), 0, 0],
-                  [(0, 6), 0, 0, 0, (0, 0), (0, 3), 0, 0]]
+                    [(0, 16), 0, 0, (0, 0), (17, 24), 0, 0, 0],
+                    [(0, 17), 0, 0, (15, 29), 0, 0, 0, 0],
+                    [(0, 35), 0, 0, 0, 0, 0, (12, 0), (0, 0)],
+                    [(0, 0), (0, 7), 0, 0, (7, 8), 0, 0, (7, 0)],
+                    [(0, 0), (11, 0), (10, 16), 0, 0, 0, 0, 0],
+                    [(0, 21), 0, 0, 0, 0, (0, 5), 0, 0],
+                    [(0, 6), 0, 0, 0, (0, 0), (0, 3), 0, 0]]
     kakuro_8x8_N = np.array(kakuro_8x8_N)
 
     kakuro_8x8_S = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
-                  [(0, 16), 9, 7, (0, 0), (17, 24), 8, 7, 9],
-                  [(0, 17), 8, 9, (15, 29), 8, 9, 5, 7],
-                  [(0, 35), 6, 8, 5, 9, 7, (12, 0), (0, 0)],
-                  [(0, 0), (0, 7), 6, 1, (7, 8), 2, 6, (7, 0)],
-                  [(0, 0), (11, 0), (10, 16), 4, 6, 1, 3, 2],
-                  [(0, 21), 8, 9, 3, 1, (0, 5), 1, 4],
-                  [(0, 6), 3, 1, 2, (0, 0), (0, 3), 2, 1]]
+                    [(0, 16), 9, 7, (0, 0), (17, 24), 8, 7, 9],
+                    [(0, 17), 8, 9, (15, 29), 8, 9, 5, 7],
+                    [(0, 35), 6, 8, 5, 9, 7, (12, 0), (0, 0)],
+                    [(0, 0), (0, 7), 6, 1, (7, 8), 2, 6, (7, 0)],
+                    [(0, 0), (11, 0), (10, 16), 4, 6, 1, 3, 2],
+                    [(0, 21), 8, 9, 3, 1, (0, 5), 1, 4],
+                    [(0, 6), 3, 1, 2, (0, 0), (0, 3), 2, 1]]
 
     # 6 x 6 kakuro expert
     kakuro_6x6_N = [[(0, 0), (0, 0), (27, 0), (14, 0), (33, 0), (20, 0)],
@@ -333,6 +333,7 @@ if __name__ == "__main__":
                     [(0, 26), 0, 0, 0, 0, (0, 0)],
                     [(0, 12), 0, 0, 0, 0, (0, 0)]]
     kakuro_6x6_N = np.array(kakuro_6x6_N)
+
 
     kakuro_6x6_S = [[(0, 0), (0, 0), (27, 0), (14, 0), (33, 0), (20, 0)],
                     [(0, 0), (0, 28), 4, 8, 7, 9],
@@ -352,12 +353,22 @@ if __name__ == "__main__":
     kakuro_5x5_N = np.array(kakuro_5x5_N)
 
     kakuro_5x5_S = [
-        [(0,0), (8, 0), (24,0), (0,0), (0,0) ],
-        [(0, 15), 7, 8, (19, 0), (0, 0)],
+        [(0, 0), (8, 0), (24, 0), (0, 0), (0, 0)],
+        [(0, 15), 7, 8, (29, 0), (0, 0)],
         [(0, 10), 1, 7, 2, (9, 0)],
         [(0, 0), (0, 19), 9, 8, 2],
-        [(0, 0), (0, 0), (0, 16), 9, 7],
+        [(0, 0), (0, 0), (0, 16), 9, 7]
     ]
+
+    kakuro_5x5_N_B = "4 4\n" \
+                     "15 A1 B1\n" \
+                     "10 A2 B2 C2\n" \
+                     "19 B3 C3 D3\n" \
+                     "16 C4 D4\n" \
+                     "8 A1 A2\n" \
+                     "24 B1 B2 B3\n" \
+                     "29 C2 C3 C4\n" \
+                     "9 D3 D4"
 
     # 4 x 4 kakuro
     kakuro_4x4_N = [
@@ -367,6 +378,14 @@ if __name__ == "__main__":
         [(0, 10), 0, 0, 0],
     ]
     kakuro_4x4_N = np.array(kakuro_4x4_N)
+
+    kakuro_4x4_N_B = "3 3\n" \
+                     "18 A1 B1 C1\n" \
+                     "11 A2 B2 C2\n" \
+                     "10 A3 B3 C3\n" \
+                     "23 A1 A2 A3\n" \
+                     "9 B1 B2 B3\n" \
+                     "7 C1 C2 C3"
 
     kakuro_4x4_S = [
         [(0, 0), (23, 0), (9, 0), (7, 0)],
@@ -384,10 +403,10 @@ if __name__ == "__main__":
     kakuro_3x3_N = np.array(kakuro_3x3_N)
 
     kakuro_3x3_N_B = "2 2\n" \
-           "14 A1 A2\n" \
-           "4 B1 B2\n" \
-           "10 A1 B1\n" \
-           "8 A2 B2"
+                     "14 A1 B1\n" \
+                     "4 A2 B2\n" \
+                     "10 A1 A2\n" \
+                     "8 B1 B2"
 
     kakuro_3x3_S = [
         [(0, 0), (10, 0), (8, 0)],
@@ -395,11 +414,27 @@ if __name__ == "__main__":
         [(0, 4), 1, 3],
     ]
 
-    #TODO vzamemo eno od iger _______________________________________HAHAHAHAHAHA___________________________________
-    game = kakuro_6x6_N
+    kakuro_5x4_N = [
+        [(0, 0), (0, 0), (0, 0), (6, 0), (3, 0)],
+        [(0, 0), (4, 0), (3, 3), 0, 0],
+        [(0, 10), 0, 0, 0, 0],
+        [(0, 3), 0, 0, (0, 0), (0, 0)]
+    ]
 
-    length_game = len(game)
-    high_game = len(game[0])
+    kakuro_5x4_N_B = "4 3\n" \
+                     "3 C1 D1\n" \
+                     "10 A2 B2 C2 D2\n" \
+                     "3 A3 B3\n" \
+                     "4 A2 A3\n" \
+                     "3 B2 B3\n" \
+                     "6 C1 C2\n" \
+                     "3 D1 D2"
+
+    #TODO vzamemo eno od iger _______________________________________HAHAHAHAHAHA___________________________________
+    game = kakuro_5x4_N
+
+    length_game = len(game[0])
+    high_game = len(game)
 
     print(DataFrame(game).to_string(header=False))
 
@@ -413,7 +448,7 @@ if __name__ == "__main__":
         print("Iteracija:", iter, "Število rešenih: ", stResenih)
 
 
-    #TODO olepšaj kodo -> ustrezni komentarji
+    #TODO olepšaj kodo -> ustrezni komentarji, odstrani odvecne funkcije
     #TODO ustrezen izpis (po vrsticah), dodano merjenje časa cez vse kakurote
     #TODO dopolni predlogo
 
@@ -426,7 +461,10 @@ if __name__ == "__main__":
         # init cas
         start_time = time.time()
         # pozenes algoritem
-        backtracing.start_backtracing(kakuro_3x3_N_B, kakuro_3x3_N, False)
+        # backtracing.start_backtracing(kakuro_5x5_N_B, kakuro_5x5_N, True)
+        backtracing.start_backtracing(kakuro_5x4_N_B, kakuro_5x4_N, False)
+        # backtracing.start_backtracing(kakuro_4x4_N_B, kakuro_4x4_N, False)
+        # backtracing.start_backtracing(kakuro_3x3_N_B, kakuro_3x3_N, False)
         seconds = (time.time() - start_time)
         # pristejemo cas trenutne iteracije skupnem casu
         sum_time += seconds
