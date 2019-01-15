@@ -1,6 +1,8 @@
 import numpy as np
 import collections
 import itertools
+from itertools import permutations
+
 
 
 def get_right_number_filed(i, j, length_game):
@@ -108,10 +110,6 @@ def algoritem_init(game, length, high):
                         for m in mozna:
                             mnozice[k][j].add(m)
 
-    for m in mnozice:
-        print(m)
-    print('\n')
-
     # sedaj pogledamo se za kandidate desno, poleg tega pa naredimo presek vseh, da izlocimo neverjetne - STEP 1 & 2
     for i in range(0, length):
         for j in range(0, high):
@@ -139,9 +137,6 @@ def algoritem_init(game, length, high):
             if len(mnozice[i][j]) == 1:
                 game[i][j] = list(mnozice[i][j])[0]
 
-    # sedaj je potrebno odstraniti odvecne stevilke v informirani mrezi
-
-
     return mnozice
     # STEP 4
 
@@ -168,8 +163,60 @@ def algoritem_solve(game, length, high, mnozice):
                         nova_mozna_st = nova_mozna_st.difference(resena_stevila)
                         # posodobimo mrezo
                         for k in range(i + 1, i + down_num + 1):
+                            #TODO preverjanje kombinacij; preveri kaj tocno naredi to kar si spisal
                             if len(mnozice[k][j]) != 1:
                                 mnozice[k][j] = mnozice[k][j].intersection(nova_mozna_st)
+                        # preverimo ce so kaksne kombinacije odvec in odstranimo odvecne
+                        test = mnozice[i][j]
+                        if len(mnozice[i][j][0][0]) > 1:
+                            odstrani = []
+                            for k in range(i + 1, i + down_num + 1):
+                                for m in mnozice[i][j][0][0]:
+                                    if len(set(m).intersection(mnozice[k][j])) == 0:
+                                        odstrani.append(m)
+                            # ce smo nasli odvecne, se jih znebimo
+                            if len(odstrani) != 0:
+                                for o in odstrani:
+                                    # preverjamo, ker ga lahko po nesreci veckrat odstranimo
+                                    if o in mnozice[i][j][0][0]:
+                                        mnozice[i][j][0][0].remove(o)
+                                tmp = set()
+                                for m in mnozice[i][j][0][0]:
+                                    tmp = tmp.union(m)
+                                for k in range(i + 1, i + down_num + 1):
+                                    mnozice[k][j] = mnozice[k][j].intersection(tmp)
+                        # sedaj pogledamo če lahko kaj generiramo
+                        kombinacije = mnozice[i][j][0][0]
+                        stev = []
+                        nove_stev = []
+                        for k in range(i + 1, i + down_num + 1):
+                            stev.append(mnozice[k][j])
+                            nove_stev.append(set())
+                        odstrani = []
+                        for ko in kombinacije:
+                            perm_komb = list(permutations(ko))
+                            # preverimo ce je permutacija ok
+                            ok_kombinacija = False
+                            for p in perm_komb:
+                                # preverimo ce je iteracija permutacije ok
+                                ok_iteracija = True
+                                for ix, s in enumerate(stev):
+                                    if len(s.intersection({p[ix]})) == 0:
+                                        ok_iteracija = False
+                                if ok_iteracija == True:
+                                    ok_kombinacija = True
+                                    for ix in range(len(nove_stev)):
+                                        nove_stev[ix] = nove_stev[ix].union({p[ix]})
+                            if ok_kombinacija == False:
+                                odstrani.append(ko)
+                        for o in odstrani:
+                            if o in mnozice[i][j][0][0]:
+                                mnozice[i][j][0][0].remove(o)
+                        for k, nov in enumerate(nove_stev):
+                            mnozice[i+k+1][j] = nov
+
+
+
 
     for i in range(0, length):
         for j in range(0, high):
@@ -194,13 +241,61 @@ def algoritem_solve(game, length, high, mnozice):
                         for k in range(j + 1, j + right_num + 1):
                             if len(mnozice[i][k]) != 1:
                                 mnozice[i][k] = mnozice[i][k].intersection(nova_mozna_st)
+                        # preverimo ce so kaksne kombinacije odvec in odstranimo odvecne
+                        if len(mnozice[i][j][1][0]) > 1:
+                            odstrani = []
+                            for k in range(j + 1, j + right_num + 1):
+                                for m in mnozice[i][j][1][0]:
+                                    if len(set(m).intersection(mnozice[i][k])) == 0:
+                                        odstrani.append(m)
+                            # ce smo nasli odvecne, se jih znebimo
+                            if len(odstrani) != 0:
+                                for o in odstrani:
+                                    # preverjamo, ker ga lahko po nesreci veckrat odstranimo
+                                    if o in mnozice[i][j][1][0]:
+                                        mnozice[i][j][1][0].remove(o)
+                                tmp = set()
+                                for m in mnozice[i][j][1][0]:
+                                    tmp = tmp.union(m)
+                                for k in range(j + 1, j + right_num + 1):
+                                    mnozice[i][k] = mnozice[i][k].intersection(tmp)
+                        #TODO sedaj pogledamo če lahko kaj generiramo
+                        kombinacije = mnozice[i][j][1][0]
+                        stev = []
+                        nove_stev = []
+                        for k in range(j + 1, j + right_num + 1):
+                            stev.append(mnozice[i][k])
+                            nove_stev.append(set())
+                        odstrani = []
+                        for ko in kombinacije:
+                            perm_komb = list(permutations(ko))
+                            # preverimo ce je permutacija ok
+                            ok_kombinacija = False
+                            for p in perm_komb:
+                                # preverimo ce je iteracija permutacije ok
+                                ok_iteracija = True
+                                for ix, s in enumerate(stev):
+                                    if len(s.intersection({p[ix]})) == 0:
+                                        ok_iteracija = False
+                                if ok_iteracija == True:
+                                    ok_kombinacija = True
+                                    for ix in range(len(nove_stev)):
+                                        nove_stev[ix] = nove_stev[ix].union({p[ix]})
+                            if ok_kombinacija == False:
+                                odstrani.append(ko)
+                        for o in odstrani:
+                            if o in mnozice[i][j][1][0]:
+                                mnozice[i][j][1][0].remove(o)
+                        for k, nov in enumerate(nove_stev):
+                            mnozice[i][j+k+1] = nov
+
 
     for i in range(0, length):
         for j in range(0, high):
             # ce je mozna le ena stevilka jo vpisemo v igro
             if len(mnozice[i][j]) == 1:
                 game[i][j] = list(mnozice[i][j])[0]
-
+    #TODO sedaj je potrebno nekaj narediti v zvezi s kombinacijami tm gor
     return mnozice
 
 
@@ -235,6 +330,7 @@ if __name__ == "__main__":
     down_num = 0
     right_num = 0
     #print(mozna_stevila(4, 13))
+    """
     print(mozne_kombinacije(3, 21))
     print(mozne_kombinacije(3, 24))
     print(mozne_kombinacije(2, 12))
@@ -244,18 +340,22 @@ if __name__ == "__main__":
     print(mozne_kombinacije(2, 5))
     print(mozne_kombinacije(2, 11))
     print(mozne_kombinacije(3, 9))
-
+    """
     mn = algoritem_init(game, length_game, high_game)
 
     for m in mn:
         print(m)
     print('\n')
 
-    for i in range(20):
+    for i in range(70):
         algoritem_solve(game, length_game, high_game, mn)
 
     for m in mn:
         print(m)
+    print('\n')
+
+    for g in game:
+        print(g)
 
 
 
