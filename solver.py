@@ -2,7 +2,8 @@ import numpy as np
 import collections
 import itertools
 from itertools import permutations
-
+import backtracing
+import time
 
 
 def get_right_number_filed(i, j, length_game):
@@ -71,6 +72,7 @@ def mozne_kombinacije(st_polj, sestevek):
         if sum(seq) == sestevek:
             rez.add(seq)
     return rez
+
 
 
 def mozna_stevila(st_polj, sestevek):
@@ -299,9 +301,21 @@ def algoritem_solve(game, length, high, mnozice):
     return mnozice
 
 
+def algorithem_backtracing(game):
+    length_game = len(game)
+    height_game = len(game[0])
+
+    # all check for equation
+    
+
+
+
+
+
 if __name__ == "__main__":
     set_of_number = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
-    kakuro_1_N = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
+    # 8 x 8 kakuro
+    kakuro_8x8_N = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
                   [(0, 16), 0, 0, (0, 0), (17, 24), 0, 0, 0],
                   [(0, 17), 0, 0, (15, 29), 0, 0, 0, 0],
                   [(0, 35), 0, 0, 0, 0, 0, (12, 0), (0, 0)],
@@ -309,9 +323,9 @@ if __name__ == "__main__":
                   [(0, 0), (11, 0), (10, 16), 0, 0, 0, 0, 0],
                   [(0, 21), 0, 0, 0, 0, (0, 5), 0, 0],
                   [(0, 6), 0, 0, 0, (0, 0), (0, 3), 0, 0]]
-    np_kakuro_1_N = np.array(kakuro_1_N)
+    kakuro_8x8_N = np.array(kakuro_8x8_N)
 
-    kakuro_1_S = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
+    kakuro_8x8_S = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
                   [(0, 16), 9, 7, (0, 0), (17, 24), 8, 7, 9],
                   [(0, 17), 8, 9, (15, 29), 8, 9, 5, 7],
                   [(0, 35), 6, 8, 5, 9, 7, (12, 0), (0, 0)],
@@ -320,8 +334,80 @@ if __name__ == "__main__":
                   [(0, 21), 8, 9, 3, 1, (0, 5), 1, 4],
                   [(0, 6), 3, 1, 2, (0, 0), (0, 3), 2, 1]]
 
-    np_kakuro_1_S = np.array(kakuro_1_S)
-    game = np_kakuro_1_N
+    # 6 x 6 kakuro expert
+    kakuro_6x6_N = [[(0, 0), (0, 0), (0, 0), (5, 0), (9, 0), (16, 0), (20, 0)],
+                    [(0, 0), (0, 0), (18, 11), 0, 0, 0, 0],
+                    [(0, 0), (26, 25), 0, 0, 0, 0, 0],
+                    [(0, 16), 0, 0, (0, 0), (0, 4), 0, 0],
+                    [(0, 10), 0, 0, (17, 0), (0, 14), 0, 0],
+                    [(0, 28), 0, 0, 0, 0, 0, (0, 0)],
+                    [(0, 14), 0, 0, 0, 0, (0, 0), (0, 0)]]
+    kakuro_6x6_N = np.array(kakuro_6x6_N)
+
+    kakuro_6x6_N = [[(0, 0), (0, 0), (0, 0), (5, 0), (9, 0), (16, 0), (20, 0)],
+                    [(0, 0), (0, 0), (18, 11), 3, 1, 2, 5],
+                    [(0, 0), (26, 25), 5, 2, 8, 4, 6],
+                    [(0, 16), 9, 7, (0, 0), (0, 4), 3, 1],
+                    [(0, 10), 8, 2, (17, 0), (0, 14), 6, 8],
+                    [(0, 28), 7, 3, 9, 8, 1, (0, 0)],
+                    [(0, 14), 2, 1, 8, 3, (0, 0), (0, 0)]]
+
+    # 5 x 5 kakuro
+    kakuro_5x5_N = [
+        [(0,0), (8, 0), (24,0), (0,0), (0,0) ],
+        [(0, 15), 0, 0, (29, 0), (0, 0)],
+        [(0, 10), 0, 0, 0, (9, 0)],
+        [(0, 0), (0, 19), 0, 0, 0],
+        [(0, 0), (0, 0), (0, 16), 0, 0],
+    ]
+    kakuro_5x5_N = np.array(kakuro_5x5_N)
+
+    kakuro_5x5_S = [
+        [(0,0), (8, 0), (24,0), (0,0), (0,0) ],
+        [(0, 15), 7, 8, (29, 0), (0, 0)],
+        [(0, 10), 1, 7, 2, (9, 0)],
+        [(0, 0), (0, 19), 9, 8, 2],
+        [(0, 0), (0, 0), (0, 16), 9, 7],
+    ]
+
+    # 4 x 4 kakuro
+    kakuro_4x4_N = [
+        [(0, 0), (23, 0), (9, 0), (7, 0)],
+        [(0, 18), 0, 0, 0],
+        [(0, 11), 0, 0, 0],
+        [(0, 10), 0, 0, 0],
+    ]
+    kakuro_4x4_N = np.array(kakuro_4x4_N)
+
+    kakuro_4x4_S = [
+        [(0, 0), (23, 0), (9, 0), (7, 0)],
+        [(0, 18), 9, 5, 4],
+        [(0, 11), 8, 1, 2],
+        [(0, 10), 6, 3, 1],
+    ]
+
+    # 3 x 3 kakuro
+    kakuro_3x3_N = [
+        [(0, 0), (10, 0), (8, 0)],
+        [(0, 14), 0, 0],
+        [(0, 4), 0, 0],
+    ]
+    kakuro_3x3_N = np.array(kakuro_3x3_N)
+
+    kakuro_3x3_N_B = "2 2\n" \
+           "14 A1 A2\n" \
+           "4 B1 B2\n" \
+           "10 A1 B1\n" \
+           "8 A2 B2"
+
+    kakuro_3x3_S = [
+        [(0, 0), (10, 0), (8, 0)],
+        [(0, 14), 9, 5],
+        [(0, 4), 1, 3],
+    ]
+
+    np_kakuro_1_S = np.array(kakuro_8x8_S)
+    game = kakuro_8x8_N
 
     length_game = len(game)
 
@@ -352,6 +438,7 @@ if __name__ == "__main__":
 
     for m in mn:
         print(m)
+
     print('\n')
 
     for g in game:
@@ -359,3 +446,18 @@ if __name__ == "__main__":
 
 
 
+
+    """
+
+    STEPS = 10
+    sum_time = 0
+    for i in range (0, STEPS):
+        start_time = time.time()
+        backtracing.start_backtracing(kakuro_3x3_N_B, kakuro_3x3_N, False)
+        seconds = (time.time() - start_time)
+        sum_time += seconds
+        #print("--- %s seconds ---" % seconds)
+
+    average_time = sum_time / STEPS
+    print(average_time)
+"""
