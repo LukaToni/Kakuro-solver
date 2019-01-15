@@ -106,12 +106,25 @@ def backtracking (board,rules,cnt_rule, kakuro_original, print1) :
     else:
         if cnt_rule < len(rules):
             new_candidates = get_new_candidates(rules,cnt_rule)
-            for new_candidate in new_candidates:
+            all_posible = []
+            for candidate in new_candidates:
+                unique = True
+                not_dublet = np.unique(candidate, axis=0)
+                len_unique = len(not_dublet)
 
-                for i in new_candidate:
+                if len(candidate) != len_unique:
+                    unique = False
+
+                more_than_nine = False
+                for i in candidate:
                     if i > 9:
-                        break
+                        more_than_nine = True
+                        continue
+                if more_than_nine == False and unique == True:
+                    all_posible.append(candidate)
 
+
+            for new_candidate in all_posible:
                 new_board = apply_candidate(board,new_candidate,rules,cnt_rule)
                 solution = backtracking(new_board,rules,cnt_rule+1, kakuro_original, print1)
                 if solution[0]:
@@ -178,11 +191,6 @@ def start_backtracing(game, kakuro_original, steps):
     
     print( "Board result: "+str(result[1]))
     """
-
-    a = result
-    b = result[1]
-    c = result[1][0][0]
-
 
     print("SOLUTION:")
     for i in range(0, len(cols)):
