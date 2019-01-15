@@ -131,8 +131,6 @@ def algoritem_init(game, length, high):
                             tmp.add(m)
                         mnozice[i][k] = mnozice[i][k].intersection(tmp)
 
-    # sedaj smo naredili korak 2 -> imamo torej informirano mrezo, ki nam pove mozne stevilke v posametnem polju.
-    # tukaj lahko izberemo en informiran algoritem in uporabimo mrezo mnozice. lotimo se koraka 3 (STEP 3)
     for i in range(0, length):
         for j in range(0, high):
             # ce je mozna le ena stevilka jo vpisemo v igro
@@ -301,17 +299,6 @@ def algoritem_solve(game, length, high, mnozice):
     return mnozice
 
 
-def algorithem_backtracing(game):
-    length_game = len(game)
-    height_game = len(game[0])
-
-    # all check for equation
-    
-
-
-
-
-
 if __name__ == "__main__":
     set_of_number = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
     # 8 x 8 kakuro
@@ -344,7 +331,7 @@ if __name__ == "__main__":
                     [(0, 14), 0, 0, 0, 0, (0, 0), (0, 0)]]
     kakuro_6x6_N = np.array(kakuro_6x6_N)
 
-    kakuro_6x6_N = [[(0, 0), (0, 0), (0, 0), (5, 0), (9, 0), (16, 0), (20, 0)],
+    kakuro_6x6_S = [[(0, 0), (0, 0), (0, 0), (5, 0), (9, 0), (16, 0), (20, 0)],
                     [(0, 0), (0, 0), (18, 11), 3, 1, 2, 5],
                     [(0, 0), (26, 25), 5, 2, 8, 4, 6],
                     [(0, 16), 9, 7, (0, 0), (0, 4), 3, 1],
@@ -406,58 +393,46 @@ if __name__ == "__main__":
         [(0, 4), 1, 3],
     ]
 
+    # vzamemo eno od iger
     np_kakuro_1_S = np.array(kakuro_8x8_S)
     game = kakuro_8x8_N
 
     length_game = len(game)
-
     high_game = len(game[0])
 
-    down_num = 0
-    right_num = 0
-    #print(mozna_stevila(4, 13))
-    """
-    print(mozne_kombinacije(3, 21))
-    print(mozne_kombinacije(3, 24))
-    print(mozne_kombinacije(2, 12))
-    print(mozne_kombinacije(3, 6))
-    print(mozne_kombinacije(3, 7))
-    print(mozne_kombinacije(2, 3))
-    print(mozne_kombinacije(2, 5))
-    print(mozne_kombinacije(2, 11))
-    print(mozne_kombinacije(3, 9))
-    """
+    # TODO izpis
+    for g in game:
+        print(g)
+    print('\n')
+
     mn = algoritem_init(game, length_game, high_game)
 
-    for m in mn:
-        print(m)
-    print('\n')
 
     for i in range(70):
         algoritem_solve(game, length_game, high_game, mn)
 
-    for m in mn:
-        print(m)
-
-    print('\n')
-
     for g in game:
         print(g)
 
+    #TODO olepšaj kodo -> ustrezni komentarji, da se koda zažene samo tolikokrat kot se mora (st polj v gameu)
+    #TODO ustrezen izpis (po vrsticah), dodano merjenje časa cez vse kakurote
+    #TODO dopolni predlogo
 
 
 
-    """
 
     STEPS = 10
     sum_time = 0
     for i in range (0, STEPS):
+        # init cas
         start_time = time.time()
+        # pozenes algoritem
         backtracing.start_backtracing(kakuro_3x3_N_B, kakuro_3x3_N, False)
         seconds = (time.time() - start_time)
+        # pristejemo cas trenutne iteracije skupnem casu
         sum_time += seconds
         #print("--- %s seconds ---" % seconds)
 
     average_time = sum_time / STEPS
     print(average_time)
-"""
+
