@@ -130,7 +130,7 @@ def algoritem_solve(game, length, high, mnozice):
                         for k in range(i + 1, i + down_num + 1):
                             if len(mnozice[k][j]) != 1:
                                 mnozice[k][j] = mnozice[k][j].intersection(nova_mozna_st)
-                        # preverimo ce so kaksne kombinacije odvec in odstranimo odvecne - STEP 5
+                        # poiscemo odvecne kombinacije in jih odstranimo - STEP 5
                         if len(mnozice[i][j][0][0]) > 1:
                             odstrani = []
                             for k in range(i + 1, i + down_num + 1):
