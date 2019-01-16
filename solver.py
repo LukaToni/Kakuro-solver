@@ -1,5 +1,3 @@
-import numpy as np
-import collections
 import itertools
 from itertools import permutations
 import backtracing
@@ -16,7 +14,6 @@ def get_right_number_filed(i, j, length_game, game):
             num = num + 1
     return num
 
-
 def get_down_number_filed(i, j, high_game, game):
     num = 0
     for down_field in range(i, high_game):
@@ -25,23 +22,6 @@ def get_down_number_filed(i, j, high_game, game):
         else:
             num = num + 1
     return num
-
-
-def check_duplicate_number(np_array):
-    collected = collections.Counter(np_array)
-    for i in collected:
-        if collected[i] > 1:
-            print("Duplicate")
-            return -1
-    return 0
-
-
-def ni_duplikatov(vrednosti):
-    mnozica = set(vrednosti)
-    if len(mnozica) == len(vrednosti):
-        return True
-    return False
-
 
 def mozne_kombinacije(st_polj, sestevek):
     rez = set()
@@ -52,7 +32,6 @@ def mozne_kombinacije(st_polj, sestevek):
         if sum(seq) == sestevek:
             rez.add(seq)
     return rez
-
 
 
 def mozna_stevila(st_polj, sestevek):
@@ -292,7 +271,31 @@ def kakuro_igre():
                     [(0, 6), 0, 0, 0, (0, 0), (0, 3), 0, 0]]
     kakuro_8x8_N = np.array(kakuro_8x8_N)
 
-    kakuro_8x8_N_B = []  # TODO
+    kakuro_8x8_N_B = "7 7\n" \
+                     "16 A1 B1\n" \
+                     "24 E1 F1 G1\n" \
+                     "17 A2 B2\n" \
+                     "29 D2 E2 F2 G2\n" \
+                     "35 A3 B3 C3 D3 E3\n" \
+                     "7 B4 C4\n" \
+                     "8 E4 F4\n" \
+                     "16 C5 D5 E5 F5 G5\n" \
+                     "21 A6 B6 C6 D6\n" \
+                     "5 F6 G6\n" \
+                     "6 A7 B7 C7\n" \
+                     "3 F7 G7\n" \
+                     "23 A1 A2 A3\n" \
+                     "11 A6 A7\n" \
+                     "30 B1 B2 B3 B4\n" \
+                     "10 B6 B7\n" \
+                     "15 C3 C4 C5 C6 C7\n" \
+                     "17 D2 D3\n" \
+                     "7 D5 D6\n" \
+                     "27 E1 E2 E3 E4 E5\n" \
+                     "12 F1 F2\n" \
+                     "12 F4 F5 F6 F7\n" \
+                     "16 G1 G2\n" \
+                     "7 G5 G6 G7"
 
     kakuro_8x8_S = [[(0, 0), (23, 0), (30, 0), (0, 0), (0, 0), (27, 0), (12, 0), (16, 0)],
                     [(0, 16), 9, 7, (0, 0), (17, 24), 8, 7, 9],
@@ -312,7 +315,19 @@ def kakuro_igre():
                     [(0, 12), 0, 0, 0, 0, (0, 0)]]
     kakuro_6x6_N = np.array(kakuro_6x6_N)
 
-    kakuro_6x6_N_B = []  # TODO
+    kakuro_6x6_N_B = "5 5\n" \
+                     "28 B1 C1 D1 E1\n" \
+                     "15 B2 C2 D2 E2\n" \
+                     "12 A3 B3\n" \
+                     "26 A4 B4 C4 D4\n" \
+                     "12 A5 B5 C5 D5\n" \
+                     "17 D3 E3\n" \
+                     "12 A3 A4 A5\n" \
+                     "27 B1 B2 B3 B4 B5\n" \
+                     "14 C1 C2\n" \
+                     "4 C4 C5\n" \
+                     "33 D1 D2 D3 D4 D5\n" \
+                     "20 E1 E2 E3"
 
     kakuro_6x6_S = [[(0, 0), (0, 0), (27, 0), (14, 0), (33, 0), (20, 0)],
                     [(0, 0), (0, 28), 4, 8, 7, 9],
@@ -338,7 +353,7 @@ def kakuro_igre():
                      "16 C4 D4\n" \
                      "8 A1 A2\n" \
                      "24 B1 B2 B3\n" \
-                     "29 C2 C3 C4\n" \
+                     "19 C2 C3 C4\n" \
                      "9 D3 D4"
 
     kakuro_5x5_S = [
@@ -425,46 +440,45 @@ if __name__ == "__main__":
     print("_______________________________________________________________________\n")
     igre, igre_B = kakuro_igre()
 
-    for i in range(len(igre)):
-        STEPS = 100
+
+    for i in range(2, len(igre)):
+        STEPS = 1
         sum_time = 0
         sum_time_backtrack = 0
         igra = igre[i]
         igra_B = igre_B[i]
         high_game = len(igra)
         length_game = len(igra[0])
-        for i in range(STEPS):
-            # testiramo algoritem 1
-            start_time = time.time()
 
-            mn, stPolj, stResenih = algoritem_init(igra, length_game, high_game)
-            # postopek se zaključi, ko resimo vsa polja
-            iter = 0
+        # testiramo algoritem 1
+        start_time = time.time_ns()
+
+        mn, stPolj, stResenih = algoritem_init(igra, length_game, high_game)
+        # postopek se zaključi, ko resimo vsa polja
+        iter = 0
+        # print("Iteracija:", iter, "Število rešenih: ", stResenih)
+        while stResenih < stPolj:
+            iter += 1
+            stResenih = algoritem_solve(igra, length_game, high_game, mn)
             # print("Iteracija:", iter, "Število rešenih: ", stResenih)
-            while stResenih < stPolj:
-                iter += 1
-                stResenih = algoritem_solve(igra, length_game, high_game, mn)
-                # print("Iteracija:", iter, "Število rešenih: ", stResenih)
 
-            sum_time += (time.time() - start_time)
+        sum_time += (time.time_ns() - start_time)
 
-            # testiramo algoritem 2
-            start_time = time.time()
-
-            #TODO(odkomentiraj) backtracing.start_backtracing(igre_B[i], igre[i], False)
-
-            seconds = (time.time() - start_time)
-            # pristejemo cas trenutne iteracije skupnem casu
-            sum_time_backtrack += seconds
+        # testiramo algoritem 2 - backtracking
+        start_time = time.time_ns()
+        # TODO: če preseže 30s gre vn
+        backtracing.start_backtracking(igre_B[i], igre[i], False)
+        end_time = time.time_ns()
+        seconds = (end_time - start_time)
+        # pristejemo cas trenutne iteracije skupnem casu
+        sum_time_backtrack += seconds
 
         print("Rešitev %dx%d kakura je:\n" % (high_game, length_game))
         print(DataFrame(igra).to_string(header=False))
         print("")
-        print("Prvi algoritem je kakuro 100x rešil v času:", sum_time)
-        print("Drugi algoritem je kakuro 100x rešil v času:", sum_time_backtrack)
+        print("Prvi algoritem je kakuro rešil v času: %d ns - %d s." % (sum_time, float(sum_time/1000000000)))
+        print("Drugi algoritem je kakuro rešil v času: %d ns - %d s." % (sum_time_backtrack, float(sum_time_backtrack/1000000000)))
         print("_______________________________________________________________________\n")
-
-
 
     #TODO olepšaj kodo -> ustrezni komentarji, odstrani odvecne funkcije
     #TODO dopolni latex predlogo
