@@ -1,5 +1,6 @@
 import itertools
 from pandas import *
+import time
 
 class Cell(object):
     def __init__(self,row,col):
@@ -83,7 +84,7 @@ def apply_candidate(board,new_candidate,rules,cnt_rule):
     return board
 
 
-def backtracking (board,rules,cnt_rule, kakuro_original, write) :
+def backtracking (board,rules,cnt_rule, kakuro_original, write, start_time) :
     # print steps
     if write == True:
         for i in range(0, len(board)):
@@ -120,14 +121,18 @@ def backtracking (board,rules,cnt_rule, kakuro_original, write) :
 
 
             for new_candidate in all_possible:
+                time_ns = time.time_ns() - start_time
+                if (time_ns > 10000000000):
+                    return (False, None)
+
                 new_board = apply_candidate(board,new_candidate,rules,cnt_rule)
-                solution = backtracking(new_board,rules,cnt_rule+1, kakuro_original, write)
+                solution = backtracking(new_board,rules,cnt_rule+1, kakuro_original, write, start_time)
                 if solution[0]:
                     return solution
         return (False, None)
 
 
-def start_backtracking(game, kakuro_original, steps):
+def start_backtracking(game, kakuro_original, steps, start_time):
 
     kakuro_original = np.array(kakuro_original)
     first_value = ord('A')
@@ -167,7 +172,7 @@ def start_backtracking(game, kakuro_original, steps):
 
     init_board=[x[:] for x in [[0]*size_cols]*size_rows]
 
-    result = backtracking(init_board,rules,0, kakuro_original , steps)
+    result = backtracking(init_board,rules,0, kakuro_original , steps, start_time)
 
     if steps == True:
         print("SOLUTION:")
@@ -179,3 +184,5 @@ def start_backtracking(game, kakuro_original, steps):
                     kakuro_original[j+1][i+1] = result[1][j][i]
 
         print(DataFrame(kakuro_original).to_string(header=False))
+
+    return result

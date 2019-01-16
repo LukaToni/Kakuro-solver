@@ -441,7 +441,7 @@ if __name__ == "__main__":
     igre, igre_B = kakuro_igre()
 
 
-    for i in range(2, len(igre)):
+    for i in range(0, len(igre)):
         STEPS = 1
         sum_time = 0
         sum_time_backtrack = 0
@@ -467,17 +467,25 @@ if __name__ == "__main__":
         # testiramo algoritem 2 - backtracking
         start_time = time.time_ns()
         # TODO: če preseže 30s gre vn
-        backtracing.start_backtracking(igre_B[i], igre[i], False)
-        end_time = time.time_ns()
-        seconds = (end_time - start_time)
-        # pristejemo cas trenutne iteracije skupnem casu
-        sum_time_backtrack += seconds
+
+        result = backtracing.start_backtracking(igre_B[i], igre[i], False, start_time)
+        if result[0] == False:
+            sum_time_backtrack = 10000000000
+        else:
+            end_time = time.time_ns()
+            seconds = (end_time - start_time)
+            # pristejemo cas trenutne iteracije skupnem casu
+            sum_time_backtrack += seconds
 
         print("Rešitev %dx%d kakura je:\n" % (high_game, length_game))
         print(DataFrame(igra).to_string(header=False))
         print("")
         print("Prvi algoritem je kakuro rešil v času: %d ns - %d s." % (sum_time, float(sum_time/1000000000)))
-        print("Drugi algoritem je kakuro rešil v času: %d ns - %d s." % (sum_time_backtrack, float(sum_time_backtrack/1000000000)))
+        if result[0] == False:
+            print("Drugi algoritem ni rešil kakuro v času: %d ns - %d s." % (
+            sum_time_backtrack, float(sum_time_backtrack / 1000000000)))
+        else:
+            print("Drugi algoritem je kakuro rešil v času: %d ns - %d s." % (sum_time_backtrack, float(sum_time_backtrack/1000000000)))
         print("_______________________________________________________________________\n")
 
     #TODO olepšaj kodo -> ustrezni komentarji, odstrani odvecne funkcije
