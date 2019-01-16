@@ -121,8 +121,8 @@ def backtracking (board,rules,cnt_rule, kakuro_original, write, start_time) :
 
 
             for new_candidate in all_possible:
-                time_ns = time.time_ns() - start_time
-                if (time_ns > 10000000000):
+                time_nano = time.time_ns() - start_time
+                if (time_nano > 10000000000):
                     return (False, None)
 
                 new_board = apply_candidate(board,new_candidate,rules,cnt_rule)

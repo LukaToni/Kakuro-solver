@@ -1,6 +1,6 @@
 import itertools
 from itertools import permutations
-import backtracing
+import backtracking
 import time
 from pandas import *
 
@@ -97,7 +97,7 @@ def algoritem_init(game, length, high):
         for j in range(0, length):
             if not isinstance(game[i][j], tuple):
                 stPolj += 1
-                # ce je mozna le ena stevilka jo vpisemo v igro
+                # ce je mozna le ena stevilka jo vpisemo v igro - STEP 3
                 if len(mnozice[i][j]) == 1:
                     stResenih += 1
                     game[i][j] = list(mnozice[i][j])[0]
@@ -121,6 +121,7 @@ def algoritem_solve(game, length, high, mnozice):
                             resena_stevila.add(list(mnozice[k][j])[0])
                     # ce imamo se neresena polja
                     if len(resena_stevila) != down_num:
+                        # definiramo podproblem, odstranimo podvojene - STEP 4
                         new_down = down - sum(resena_stevila)
                         new_down_num = down_num - len(resena_stevila)
                         nova_mozna_st = mozna_stevila(new_down_num, new_down)
@@ -129,8 +130,7 @@ def algoritem_solve(game, length, high, mnozice):
                         for k in range(i + 1, i + down_num + 1):
                             if len(mnozice[k][j]) != 1:
                                 mnozice[k][j] = mnozice[k][j].intersection(nova_mozna_st)
-                        # preverimo ce so kaksne kombinacije odvec in odstranimo odvecne
-                        test = mnozice[i][j]
+                        # preverimo ce so kaksne kombinacije odvec in odstranimo odvecne - STEP 5
                         if len(mnozice[i][j][0][0]) > 1:
                             odstrani = []
                             for k in range(i + 1, i + down_num + 1):
@@ -468,7 +468,7 @@ if __name__ == "__main__":
         start_time = time.time_ns()
         # TODO: če preseže 30s gre vn
 
-        result = backtracing.start_backtracking(igre_B[i], igre[i], False, start_time)
+        result = backtracking.start_backtracking(igre_B[i], igre[i], False, start_time)
         if result[0] == False:
             sum_time_backtrack = 10000000000
         else:
